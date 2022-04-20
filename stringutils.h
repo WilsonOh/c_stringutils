@@ -23,6 +23,7 @@ char *strip(char *s);
 char *input(char *prompt);
 
 char *touppers(char *s);
+
 char *tolowers(char *s);
 
 #endif // !STRING_UTILS
