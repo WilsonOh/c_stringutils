@@ -1,11 +1,11 @@
 #include "stringutils.h"
 #include <ctype.h>
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <stdbool.h>
 
 /**
  * Library of string utility functions
@@ -96,7 +96,7 @@ char **split(char *s, char delim, size_t *num_words) {
     if (s[i] == delim || s[i] == '\0') {
       ret[count - 1] = substring(s, idx, i - idx);
       idx = ++i;
-      tmp = reallocarray(ret, count + 1, sizeof(char *));
+      tmp = realloc(ret, (count + 1) * sizeof(char *));
       ret = tmp;
       count++;
     }
@@ -193,7 +193,7 @@ char *strip(char *s) {
       buffer[idx++] = *s;
     }
     s++;
-    tmp = reallocarray(buffer, idx, sizeof(char));
+    tmp = realloc(buffer, idx * sizeof(char));
     buffer = tmp;
   }
   buffer[idx] = 0;
@@ -230,9 +230,28 @@ char *replace(char *s, char *toReplace, char *toReplaceWith) {
     } else {
       buf[buffer_index++] = s[string_index++];
     }
-    tmp = reallocarray(buf, buffer_index, sizeof(char));
+    tmp = realloc(buf, buffer_index * sizeof(char));
     buf = tmp;
   }
   buf[buffer_index] = 0;
   return buf;
+}
+
+/**
+ * Returns a copy of the string which is reversed
+ *
+ * @param s the string to be reversed
+ *
+ * @return the reversed string
+ */
+char *reversed(char *s) {
+  char tmp;
+  size_t len = strlen(s) - 1;
+  char *ret = strdup(s);
+  for (size_t i = 0; i <= len/2; i++) {
+    tmp = ret[i];
+    ret[i] = ret[len - i];
+    ret[len - i] = tmp;
+  }
+  return ret;
 }

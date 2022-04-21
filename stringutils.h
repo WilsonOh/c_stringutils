@@ -26,5 +26,7 @@ char *touppers(char *s);
 
 char *tolowers(char *s);
 
+char *reversed(char *s);
+
 #endif // !STRING_UTILS
 #define STRING_UTILS
