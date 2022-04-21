@@ -20,7 +20,7 @@ char **split(char *s, char delim, size_t *num_words);
 
 char *strip(char *s);
 
-char *input(char *prompt);
+char *read_line(char *prompt);
 
 char *touppers(char *s);
 

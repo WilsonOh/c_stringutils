@@ -136,7 +136,7 @@ char *replaceChar(char *s, char toReplace, char toReplaceWith) {
  *
  * @return the user input without the trailing newline
  */
-char *input(char *prompt) {
+char *read_line(char *prompt) {
   errno = 0;
   if (prompt != NULL) {
     printf("%s", prompt);
@@ -200,7 +200,10 @@ char *strip(char *s) {
   return buffer;
 }
 
-static bool _strcmp(char *s, char *toReplace, int index) {
+/**
+ * @brief Helper function for replace
+ */
+static bool compare_substrings(char *s, char *toReplace, int index) {
   for (size_t i = 0; i < strlen(toReplace); i++) {
     if (s[index + i] != toReplace[i])
       return false;
@@ -223,7 +226,7 @@ char *replace(char *s, char *toReplace, char *toReplaceWith) {
   size_t string_index = 0;
   size_t buffer_index = 0;
   while (string_index <= strlen(s)) {
-    if (s[string_index] == *toReplace && _strcmp(s, toReplace, string_index)) {
+    if (s[string_index] == *toReplace && compare_substrings(s, toReplace, string_index)) {
       memcpy(&buf[buffer_index], toReplaceWith, strlen(toReplaceWith));
       string_index += strlen(toReplace);
       buffer_index += strlen(toReplaceWith);
