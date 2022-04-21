@@ -255,3 +255,64 @@ char *reversed(char *s) {
   }
   return ret;
 }
+
+static char skip_space() {
+  int c;
+  do {
+    c = fgetc(stdin);
+  } while (isspace(c) && c != EOF);
+  return c;
+}
+
+static size_t fill_buffer(char *buffer, size_t buf_size) {
+  int c;
+  size_t i = 0;
+  while (1) {
+    c = fgetc(stdin);
+    if (isspace(c) || c == EOF) {
+      buffer[i] = 0;
+      return i;
+    }
+    buffer[i] = c;
+    if (i++ == buf_size) {
+      return i;
+    }
+  }
+}
+
+/**
+ * Reads from the standard input and stops upon hitting whitespace, skipping any leading whitespace
+ *
+ * @return the word read
+ */
+char *read_word() {
+  char *ret = malloc(sizeof(char));
+  if (ret == NULL) {
+    fprintf(stderr, "read_word: memory allocation error\n");
+    return NULL;
+  }
+  char *tmp;
+  int c = skip_space();
+  if (c == EOF) {
+    free(ret);
+    fprintf(stderr, "read_word: EOF error\n");
+    return NULL;
+  }
+  *ret = c;
+  size_t buf_size = 30;
+  size_t len;
+  size_t total_len = 1;
+  char buffer[buf_size];
+  do {
+    len = fill_buffer(buffer, buf_size);
+    tmp = realloc(ret, total_len + len);
+    if (tmp == NULL) {
+      fprintf(stderr, "read_word: memory allocation error\n");
+      return NULL;
+    }
+    ret = tmp;
+    memcpy(ret + total_len, buffer, len);
+    total_len += len;
+  } while (len == buf_size && buffer[len - 1] != '\0');
+  return ret;
+}

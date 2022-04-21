@@ -28,5 +28,7 @@ char *tolowers(char *s);
 
 char *reversed(char *s);
 
+char *read_word(void);
+
 #endif // !STRING_UTILS
 #define STRING_UTILS
