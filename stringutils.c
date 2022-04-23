@@ -1,11 +1,11 @@
-#include "stringutils.h"
-#include <ctype.h>
-#include <errno.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "stringutils.h"
+#include <ctype.h>
+#include <errno.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /**
  * Library of string utility functions
@@ -14,8 +14,8 @@
  *
  * @author Wilson Oh
  * @version 1.0.0 20th April 2022
- */
-
+ */
+
 /**
  * Takes in a string and returns the first word in the string, separated by a
  * delimeter If there is only one word in the string, the same string is
@@ -74,10 +74,10 @@ char *tolowers(char *s) {
  *
  * @param s string to be split
  * @param delim the delimiting character
- * @param num_words pointer to a counter with holds the number of words recieved
+ * @param num_words pointer to a counter with holds the number of words recieved
  * from the split
  *
- * Example:
+ * Example:
  *
  * size_t count;
  * char **words = split("Hello World", ' ', &count);
@@ -85,7 +85,7 @@ char *tolowers(char *s) {
  *   ...
  * }
  *
- * @return an array of of num_words number of strings
+ * @return an array of of num_words number of strings
  */
 char **split(char *s, char delim, size_t *num_words) {
   char **ret = malloc(sizeof(char *));
@@ -132,7 +132,7 @@ char *replaceChar(char *s, char toReplace, char toReplaceWith) {
  * The function takes in a string prompt, which will be printed out
  * before taking in user input if it is not an empty string
  *
- * @param prompt prompt to be printed out before getting user input. Pass in an
+ * @param prompt prompt to be printed out before getting user input. Pass in an
  * empty string "" to not print out anything
  *
  * @return the user input without the trailing newline
@@ -164,10 +164,10 @@ char *read_line(char *prompt) {
  *
  * @param s the original string
  * @param start the starting index
- * @param num_of_chars the number of characters after the starting index to be
+ * @param num_of_chars the number of characters after the starting index to be
  * extracted
  *
- * @return the substring of s starting at start and ending at start +
+ * @return the substring of s starting at start and ending at start +
  * num_of_chars
  */
 char *substring(char *s, size_t start, size_t num_of_chars) {
@@ -181,7 +181,7 @@ char *substring(char *s, size_t start, size_t num_of_chars) {
 }
 
 /**
- * Removes ALL whitespace in a string (yeah it is not very useful for multi-word
+ * Removes ALL whitespace in a string (yeah it is not very useful for multi-word
  * strings)
  *
  * @param s the string to be processed
@@ -230,7 +230,7 @@ char *replace(char *s, char *toReplace, char *toReplaceWith) {
   size_t string_index = 0;
   size_t buffer_index = 0;
   while (string_index <= strlen(s)) {
-    if (s[string_index] == *toReplace &&
+    if (s[string_index] == *toReplace &&
         compare_substrings(s, toReplace, string_index)) {
       memcpy(&buf[buffer_index], toReplaceWith, strlen(toReplaceWith));
       string_index += strlen(toReplace);
@@ -289,7 +289,7 @@ static size_t fill_buffer(char *buffer, size_t buf_size) {
 }
 
 /**
- * Reads from the standard input and stops upon hitting whitespace, skipping any
+ * Reads from the standard input and stops upon hitting whitespace, skipping any
  * leading whitespace
  *
  * @return the word read
