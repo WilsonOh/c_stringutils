@@ -1,3 +1,4 @@
 main*
 .ccls*
 Makefile
+*.o

@@ -12,6 +12,8 @@ from the functions
 - `split`
 - `replace`
 - `replaceChar`
-- `input`
 - `substring`
 - `strip`
+- `read_word`
+- `read_line`
+- `contains`

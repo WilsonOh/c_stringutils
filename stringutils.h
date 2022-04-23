@@ -30,5 +30,7 @@ char *reversed(char *s);
 
 char *read_word(void);
 
+int contains(char *s, char *t);
+
 #endif // !STRING_UTILS
 #define STRING_UTILS
