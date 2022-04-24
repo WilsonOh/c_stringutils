@@ -32,5 +32,7 @@ char *read_word(void);
 
 int contains(char *s, char *t);
 
+char *long_to_string(long n);
+
 #endif // !STRING_UTILS
 #define STRING_UTILS

@@ -344,3 +344,25 @@ int contains(char *s, char *t) {
   }
   return 1;
 }
+
+/**
+ * Converts a long integer to its string representation
+ *
+ * @param n the long integer to be converted
+ *
+ * @return the long integer's string representation
+ */
+char *long_to_string(long n) {
+  char *ret = malloc(1);
+  size_t count = 1;
+  while (n) {
+    ret[count - 1] = (n % 10) + '0';
+    ret = realloc(ret, count++);
+    n /= 10;
+  }
+  ret[count] = 0;
+  char *rev = reversed(ret);
+  free(ret);
+  return rev;
+}
+
