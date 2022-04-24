@@ -47,7 +47,7 @@ char *firstWord(char *s, char delim) {
 char *touppers(char *s) {
   char *ret = malloc(sizeof(char) * strlen(s) + 1);
   for (size_t i = 0; i < strlen(s); i++) {
-    ret[i] = toupper(s[i]);
+    ret[i] = (char) toupper(s[i]);
   }
   ret[strlen(s)] = 0;
   return ret;
@@ -63,7 +63,7 @@ char *touppers(char *s) {
 char *tolowers(char *s) {
   char *ret = malloc(sizeof(char) * strlen(s) + 1);
   for (size_t i = 0; i < strlen(s); i++) {
-    ret[i] = tolower(s[i]);
+    ret[i] = (char) tolower(s[i]);
   }
   ret[strlen(s)] = 0;
   return ret;
@@ -112,7 +112,7 @@ char **split(char *s, char delim, size_t *num_words) {
  * @param toReplace character in string to be replaced
  * @param toReplaceWith character to replace with
  *
- * @param the modified string
+ * @return the modified string
  */
 char *replaceChar(char *s, char toReplace, char toReplaceWith) {
   char *ret = malloc(sizeof(char) * strlen(s) + 1);
@@ -207,7 +207,7 @@ char *strip(char *s) {
 /**
  * @brief Helper function for replace
  */
-static bool compare_substrings(char *s, char *toReplace, int index) {
+static bool compare_substrings(char *s, char *toReplace, size_t index) {
   for (size_t i = 0; i < strlen(toReplace); i++) {
     if (s[index + i] != toReplace[i])
       return false;
@@ -222,7 +222,7 @@ static bool compare_substrings(char *s, char *toReplace, int index) {
  * @param toReplace substring in string to be replaced
  * @param toReplaceWith string to replace with
  *
- * @param the modified string
+ * @return the modified string
  */
 char *replace(char *s, char *toReplace, char *toReplaceWith) {
   char *buf = malloc(sizeof(char));
@@ -269,7 +269,7 @@ static char skip_space() {
   do {
     c = fgetc(stdin);
   } while (isspace(c) && c != EOF);
-  return c;
+  return (char) c;
 }
 
 static size_t fill_buffer(char *buffer, size_t buf_size) {
@@ -281,7 +281,7 @@ static size_t fill_buffer(char *buffer, size_t buf_size) {
       buffer[i] = 0;
       return i;
     }
-    buffer[i] = c;
+    buffer[i] = (char) c;
     if (i++ == buf_size) {
       return i;
     }
@@ -307,7 +307,7 @@ char *read_word() {
     fprintf(stderr, "read_word: EOF error\n");
     return NULL;
   }
-  *ret = c;
+  *ret = (char) c;
   size_t buf_size = 30;
   size_t len;
   size_t total_len = 1;

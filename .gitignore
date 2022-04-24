@@ -2,3 +2,4 @@ main*
 .ccls*
 Makefile
 *.o
+compile_flags.txt
