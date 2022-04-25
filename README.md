@@ -5,11 +5,15 @@ Documentation for the functions are in the source `stringutils.c` file.<br>
 It is the user's reponsibility to free the memory allocated for the string returned
 from the functions
 
+## TODO
+- Implement a more robust iterator using macros
+
 ## Included functions
 - `firstWord`
 - `touppers`
 - `tolowers`
 - `split`
+- `split_iter`
 - `replace`
 - `replaceChar`
 - `substring`
