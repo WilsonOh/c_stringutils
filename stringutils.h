@@ -1,7 +1,8 @@
 #ifndef STRING_UTILS
 #define STRING_UTILS
 
-#include <stddef.h>
+#include "iterator.h"
+#include <stdio.h>
 
 /**
  * All documentation is in the souce file
@@ -16,7 +17,9 @@ char *replace(char *s, char *toReplace, char *toReplaceWith);
 
 char *substring(char *s, size_t start, size_t num_of_chars);
 
-char **split(char *s, char delim, size_t *num_words);
+char **split(char *s, char delim, ssize_t *num_words);
+
+string_iterator_t *split_iter(char *s, char delim);
 
 char *strip(char *s);
 

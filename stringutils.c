@@ -1,4 +1,5 @@
 #include "stringutils.h"
+#include "iterator.h"
 #include <ctype.h>
 #include <errno.h>
 #include <stdbool.h>
@@ -71,6 +72,8 @@ char *tolowers(char *s) {
 
 /**
  * Splits a string by the specified delimiting character
+ * I guess the difference between this and string.h's strsep is
+ * that strsep is destruction while this function is not.
  *
  * @param s string to be split
  * @param delim the delimiting character
@@ -87,7 +90,7 @@ char *tolowers(char *s) {
  *
  * @return an array of of num_words number of strings
  */
-char **split(char *s, char delim, size_t *num_words) {
+char **split(char *s, char delim, ssize_t *num_words) {
   char **ret = malloc(sizeof(char *));
   char **tmp;
   size_t count = 1;
@@ -103,6 +106,43 @@ char **split(char *s, char delim, size_t *num_words) {
   }
   *num_words = count - 1;
   return ret;
+}
+
+/**
+ * Same as split, but returns a string_iterator_t type instead
+ * This aims to make iterating over the tokens more convenient as
+ * there is no need to manage the counting using a separate variable
+ *
+ * Example Usage:
+ * 
+ * string_iterator_t *si = split_iter("Hello World", ' ');
+ * char *curr;
+ * while ((curr = iterate(si)) != NULL) {
+ *   printf("%s\n", curr);
+ *   etc...
+ * }
+ *
+ * @param s the string to be split
+ * @param delim the delimeter character
+ *
+ * @return a pointer to a string_iterator_t which contains the split tokens
+ */
+string_iterator_t *split_iter(char *s, char delim) {
+  char **ret = malloc(sizeof(char *));
+  char **tmp;
+  size_t count = 1;
+  size_t idx = 0;
+  for (size_t i = 0; i < strlen(s) + 1; i++) {
+    if (s[i] == delim || s[i] == '\0') {
+      ret[count - 1] = substring(s, idx, i - idx);
+      idx = ++i;
+      tmp = realloc(ret, (count + 1) * sizeof(char *));
+      ret = tmp;
+      count++;
+    }
+  }
+  string_iterator_t *si = new_string_iterator(ret, count - 1);
+  return si;
 }
 
 /**
