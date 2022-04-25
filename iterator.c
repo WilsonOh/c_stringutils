@@ -31,6 +31,7 @@ struct string_iterator_t *new_string_iterator_v(int num, ...) {
     s[i] = va_arg(valist, char *);
   }
   string_iterator_t *si = new_string_iterator(s, num);
+  va_end(valist);
   return si;
 }
 
