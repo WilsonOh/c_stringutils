@@ -17,3 +17,4 @@ from the functions
 - `read_word`
 - `read_line`
 - `contains`
+- `long_to_string`
