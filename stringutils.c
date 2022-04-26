@@ -18,6 +18,17 @@
  */
 
 /**
+ * @brief Helper function for replace
+ */
+static bool compare_substrings(char *s, char *toReplace, size_t index) {
+  for (size_t i = 0; i < strlen(toReplace); i++) {
+    if (s[index + i] != toReplace[i])
+      return false;
+  }
+  return true;
+}
+
+/**
  * Takes in a string and returns the first word in the string, separated by a
  * delimeter If there is only one word in the string, the same string is
  * returned
@@ -76,7 +87,7 @@ char *tolowers(char *s) {
  * that strsep is destruction while this function is not.
  *
  * @param s string to be split
- * @param delim the delimiting character
+ * @param delim the delimiting string
  * @param num_words pointer to a counter with holds the number of words recieved
  * from the split
  *
@@ -90,21 +101,28 @@ char *tolowers(char *s) {
  *
  * @return an array of of num_words number of strings
  */
-char **split(char *s, char delim, ssize_t *num_words) {
+char **split(char *s, char* delim, size_t *num_words) {
   char **ret = malloc(sizeof(char *));
   char **tmp;
   size_t count = 1;
   size_t idx = 0;
-  for (size_t i = 0; i < strlen(s) + 1; i++) {
-    if (s[i] == delim || s[i] == '\0') {
+  size_t delim_len = strlen(delim);
+  for (size_t i = 0; i <= strlen(s) + 1; i++) {
+    if (s[i] == *delim) {
+      if (compare_substrings(s, delim, i)) {
+        ret[count - 1] = substring(s, idx, i - idx);
+        i += delim_len - 1;
+        idx = i + 1;
+        tmp = realloc(ret, (count + 1) * sizeof(char *));
+        ret = tmp;
+        count++;
+      }
+    } else if (s[i] == '\0') {
       ret[count - 1] = substring(s, idx, i - idx);
-      idx = ++i;
-      tmp = realloc(ret, (count + 1) * sizeof(char *));
-      ret = tmp;
-      count++;
+      i += delim_len;
     }
   }
-  *num_words = count - 1;
+  *num_words = count;
   return ret;
 }
 
@@ -127,21 +145,29 @@ char **split(char *s, char delim, ssize_t *num_words) {
  *
  * @return a pointer to a string_iterator_t which contains the split tokens
  */
-string_iterator_t *split_iter(char *s, char delim) {
+
+string_iterator_t *split_iter(char *s, char* delim) {
   char **ret = malloc(sizeof(char *));
   char **tmp;
   size_t count = 1;
   size_t idx = 0;
-  for (size_t i = 0; i < strlen(s) + 1; i++) {
-    if (s[i] == delim || s[i] == '\0') {
+  size_t delim_len = strlen(delim);
+  for (size_t i = 0; i <= strlen(s) + 1; i++) {
+    if (s[i] == *delim) {
+      if (compare_substrings(s, delim, i)) {
+        ret[count - 1] = substring(s, idx, i - idx);
+        i += delim_len - 1;
+        idx = i + 1;
+        tmp = realloc(ret, (count + 1) * sizeof(char *));
+        ret = tmp;
+        count++;
+      }
+    } else if (s[i] == '\0') {
       ret[count - 1] = substring(s, idx, i - idx);
-      idx = ++i;
-      tmp = realloc(ret, (count + 1) * sizeof(char *));
-      ret = tmp;
-      count++;
+      i += delim_len;
     }
   }
-  string_iterator_t *si = new_string_iterator(ret, count - 1);
+  string_iterator_t *si = new_string_iterator(ret, count);
   return si;
 }
 
@@ -216,7 +242,7 @@ char *substring(char *s, size_t start, size_t num_of_chars) {
   }
   char *ret = malloc(sizeof(char) * num_of_chars + 1);
   memcpy(ret, s + start, num_of_chars);
-  ret[num_of_chars + 1] = 0;
+  ret[num_of_chars] = 0;
   return ret;
 }
 
@@ -242,17 +268,6 @@ char *strip(char *s) {
   }
   buffer[idx] = 0;
   return buffer;
-}
-
-/**
- * @brief Helper function for replace
- */
-static bool compare_substrings(char *s, char *toReplace, size_t index) {
-  for (size_t i = 0; i < strlen(toReplace); i++) {
-    if (s[index + i] != toReplace[i])
-      return false;
-  }
-  return true;
 }
 
 /**
