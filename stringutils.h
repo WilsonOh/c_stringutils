@@ -37,5 +37,9 @@ int contains(char *s, char *t);
 
 char *long_to_string(long n);
 
+char *read_file(const char *file);
+
+long string_to_long(char *s);
+
 #endif // !STRING_UTILS
 #define STRING_UTILS

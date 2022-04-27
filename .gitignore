@@ -1,5 +1,7 @@
-main*
-.ccls*
-Makefile
-*.o
-compile_flags.txt
+*
+!.gitignore
+!stringutils.c
+!stringutils.h
+!iterator.c
+!iterator.h
+!README.md

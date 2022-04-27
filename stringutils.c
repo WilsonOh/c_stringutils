@@ -1,12 +1,17 @@
 #include "stringutils.h"
 #include "iterator.h"
 #include <ctype.h>
+#include <limits.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 /**
  * Library of string utility functions
@@ -59,7 +64,7 @@ char *firstWord(char *s, char delim) {
 char *touppers(char *s) {
   char *ret = malloc(sizeof(char) * strlen(s) + 1);
   for (size_t i = 0; i < strlen(s); i++) {
-    ret[i] = (char) toupper(s[i]);
+    ret[i] = (char)toupper(s[i]);
   }
   ret[strlen(s)] = 0;
   return ret;
@@ -75,7 +80,7 @@ char *touppers(char *s) {
 char *tolowers(char *s) {
   char *ret = malloc(sizeof(char) * strlen(s) + 1);
   for (size_t i = 0; i < strlen(s); i++) {
-    ret[i] = (char) tolower(s[i]);
+    ret[i] = (char)tolower(s[i]);
   }
   ret[strlen(s)] = 0;
   return ret;
@@ -101,7 +106,7 @@ char *tolowers(char *s) {
  *
  * @return an array of of num_words number of strings
  */
-char **split(char *s, char* delim, size_t *num_words) {
+char **split(char *s, char *delim, size_t *num_words) {
   char **ret = malloc(sizeof(char *));
   char **tmp;
   size_t count = 1;
@@ -118,7 +123,12 @@ char **split(char *s, char* delim, size_t *num_words) {
         count++;
       }
     } else if (s[i] == '\0') {
-      ret[count - 1] = substring(s, idx, i - idx);
+      char *x;
+      if (strlen((x = substring(s, idx, i - idx))) != 0) {
+        ret[count - 1] = x;
+      } else {
+        free(x);
+      }
       i += delim_len;
     }
   }
@@ -132,7 +142,7 @@ char **split(char *s, char* delim, size_t *num_words) {
  * there is no need to manage the counting using a separate variable
  *
  * Example Usage:
- * 
+ *
  * string_iterator_t *si = split_iter("Hello World", ' ');
  * char *curr;
  * while ((curr = iterate(si)) != NULL) {
@@ -146,7 +156,7 @@ char **split(char *s, char* delim, size_t *num_words) {
  * @return a pointer to a string_iterator_t which contains the split tokens
  */
 
-string_iterator_t *split_iter(char *s, char* delim) {
+string_iterator_t *split_iter(char *s, char *delim) {
   char **ret = malloc(sizeof(char *));
   char **tmp;
   size_t count = 1;
@@ -163,7 +173,12 @@ string_iterator_t *split_iter(char *s, char* delim) {
         count++;
       }
     } else if (s[i] == '\0') {
-      ret[count - 1] = substring(s, idx, i - idx);
+      char *x;
+      if (strlen((x = substring(s, idx, i - idx))) != 0) {
+        ret[count - 1] = x;
+      } else {
+        free(x);
+      }
       i += delim_len;
     }
   }
@@ -324,7 +339,7 @@ static char skip_space() {
   do {
     c = fgetc(stdin);
   } while (isspace(c) && c != EOF);
-  return (char) c;
+  return (char)c;
 }
 
 static size_t fill_buffer(char *buffer, size_t buf_size) {
@@ -336,7 +351,7 @@ static size_t fill_buffer(char *buffer, size_t buf_size) {
       buffer[i] = 0;
       return i;
     }
-    buffer[i] = (char) c;
+    buffer[i] = (char)c;
     if (i++ == buf_size) {
       return i;
     }
@@ -362,7 +377,7 @@ char *read_word() {
     fprintf(stderr, "read_word: EOF error\n");
     return NULL;
   }
-  *ret = (char) c;
+  *ret = (char)c;
   size_t buf_size = 30;
   size_t len;
   size_t total_len = 1;
@@ -421,3 +436,64 @@ char *long_to_string(long n) {
   return rev;
 }
 
+/**
+ * Reads from a file and maps its entire contents in memory, returning a pointer to it
+ *
+ * @param filepath path to the file to be read
+ * @return pointer to the contents of the file mapped in memory
+ *
+ */
+char *read_file(const char *filepath) {
+  ssize_t fd;
+  char *path;
+  char *ret;
+  struct stat sb;
+  if ((path = realpath(filepath, NULL)) == NULL) {
+    if (errno == ENOENT) {
+      fprintf(stderr, "Error: File <%s> Does Not Exist\n", filepath);
+    }
+  }
+  fd = open(path, O_RDONLY);
+  if (fstat(fd, &sb) == -1) {
+    perror("fstat");
+  }
+  if ((ret = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) ==
+      MAP_FAILED) {
+    perror("mmap");
+  }
+  free(path);
+  return ret;
+  // munmap(file, sb.st_size);
+}
+
+/**
+ * Wrapper around strtol
+ * Out of range, invalid input and incomplete conversion errors are
+ * checked for.
+ *
+ * @param s string to be converted to a long
+ * @return the long representation of the string if conversion is successful
+ * else returns LONG_MAX
+ */
+long string_to_long(char *s){
+  char *end_ptr;
+  long number;
+
+  errno = 0;
+
+  number = strtol(s, &end_ptr, 10);
+
+  if (ERANGE == errno) {
+    fprintf(stderr, "string_to_long: number '%s' out of range\n", s);
+    return LONG_MAX;
+  }
+  if (end_ptr == s) {
+    fprintf(stderr, "string_to_long: '%s' is not a valid numeric input\n", s);
+    return LONG_MAX;
+  }
+  if ('\n' != *end_ptr && '\0' != *end_ptr) {
+    fprintf(stderr, "string_to_long: reach the end without null/newline. '%s' remains\n", end_ptr);
+    return LONG_MAX;
+  }
+  return number;
+}
