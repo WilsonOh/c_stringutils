@@ -19,7 +19,7 @@ char *substring(char *s, size_t start, size_t num_of_chars);
 
 char **split(char *s, char *delim, size_t *num_words);
 
-string_iterator_t *split_iter(char *s, char *delim);
+iterator_t *split_iter(char *s, char *delim);
 
 char *strip(char *s);
 

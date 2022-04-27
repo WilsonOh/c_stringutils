@@ -132,7 +132,7 @@ char **split(char *s, char *delim, size_t *num_words) {
       i += delim_len;
     }
   }
-  *num_words = count;
+  *num_words = count - 1;
   return ret;
 }
 
@@ -156,7 +156,7 @@ char **split(char *s, char *delim, size_t *num_words) {
  * @return a pointer to a string_iterator_t which contains the split tokens
  */
 
-string_iterator_t *split_iter(char *s, char *delim) {
+iterator_t *split_iter(char *s, char *delim) {
   char **ret = malloc(sizeof(char *));
   char **tmp;
   size_t count = 1;
@@ -182,7 +182,7 @@ string_iterator_t *split_iter(char *s, char *delim) {
       i += delim_len;
     }
   }
-  string_iterator_t *si = new_string_iterator(ret, count);
+  iterator_t *si = new_iterator(ret, count - 1);
   return si;
 }
 
