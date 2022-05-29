@@ -27,7 +27,7 @@
  */
 static bool compare_substrings(char *s, char *toReplace, size_t index) {
   for (size_t i = 0; i < strlen(toReplace); i++) {
-    if (s[index + i] != toReplace[i])
+    if (s[index + i] == 0 || s[index + i] != toReplace[i])
       return false;
   }
   return true;
@@ -408,11 +408,11 @@ int contains(char *s, char *t) {
   for (size_t i = 0; i < strlen(s); i++) {
     if (s[i] == *t) {
       if (compare_substrings(s, t, i)) {
-        return 0;
+        return 1;
       }
     }
   }
-  return 1;
+  return 0;
 }
 
 /**
