@@ -299,17 +299,22 @@ char *replace(char *s, char *toReplace, char *toReplaceWith) {
   char *tmp;
   size_t string_index = 0;
   size_t buffer_index = 0;
+  size_t curr;
   while (string_index <= strlen(s)) {
     if (s[string_index] == *toReplace &&
         compare_substrings(s, toReplace, string_index)) {
-      memcpy(&buf[buffer_index], toReplaceWith, strlen(toReplaceWith));
+      curr = buffer_index;
       string_index += strlen(toReplace);
       buffer_index += strlen(toReplaceWith);
+      tmp = realloc(buf, buffer_index * sizeof(char) + 1);
+      buf = tmp;
+      memcpy(&buf[curr], toReplaceWith, strlen(toReplaceWith));
     } else {
+      curr = buffer_index;
       buf[buffer_index++] = s[string_index++];
+      tmp = realloc(buf, buffer_index * sizeof(char) + 1);
+      buf = tmp;
     }
-    tmp = realloc(buf, buffer_index * sizeof(char));
-    buf = tmp;
   }
   buf[buffer_index] = 0;
   return buf;
