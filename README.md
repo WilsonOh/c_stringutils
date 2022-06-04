@@ -8,6 +8,9 @@ from the functions
 ## TODO
 - Implement a more robust iterator using macros
 
+## NOTE
+Some functions do not work in Windows. It is reccomended to use the library in a linux environment.
+
 ## Included functions
 - `firstWord`
 - `touppers`
