@@ -9,7 +9,7 @@ from the functions
 - Implement a more robust iterator using macros
 
 ## NOTE
-Some functions do not work in Windows. It is reccomended to use the library in a linux environment.
+Some functions do not work in Windows. It is reccomended to use the library in a linux/macOS environment.
 
 ## Included functions
 - `firstWord`
