@@ -41,5 +41,7 @@ char *read_file(const char *file);
 
 long string_to_long(char *s);
 
+int find_substr(char *haystack, char *needle);
+
 #endif // !STRING_UTILS
 #define STRING_UTILS

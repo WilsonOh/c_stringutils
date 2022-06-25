@@ -1,9 +1,9 @@
 #include "stringutils.h"
 #include "iterator.h"
 #include <ctype.h>
-#include <limits.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -442,7 +442,8 @@ char *long_to_string(long n) {
 }
 
 /**
- * Reads from a file and maps its entire contents in memory, returning a pointer to it
+ * Reads from a file and maps its entire contents in memory, returning a pointer
+ * to it
  *
  * @param filepath path to the file to be read
  * @return pointer to the contents of the file mapped in memory
@@ -480,7 +481,7 @@ char *read_file(const char *filepath) {
  * @return the long representation of the string if conversion is successful
  * else returns LONG_MAX
  */
-long string_to_long(char *s){
+long string_to_long(char *s) {
   char *end_ptr;
   long number;
 
@@ -497,8 +498,31 @@ long string_to_long(char *s){
     return LONG_MAX;
   }
   if ('\n' != *end_ptr && '\0' != *end_ptr) {
-    fprintf(stderr, "string_to_long: reach the end without null/newline. '%s' remains\n", end_ptr);
+    fprintf(
+        stderr,
+        "string_to_long: reach the end without null/newline. '%s' remains\n",
+        end_ptr);
     return LONG_MAX;
   }
   return number;
+}
+
+/**
+ * Returns the index of a substring `needle` in another string `haystack`.
+ * If the substring doesn't exist, return -1
+ *
+ * @param haystack the string to be searched
+ * @param needle the substring
+ *
+ * @return index of `needle` in `haystack` if found, else -1
+ */
+int find_substr(char *haystack, char *needle) {
+  size_t haystack_len = strlen(haystack);
+  size_t needle_len = strlen(needle);
+  for (size_t i = 0; i < haystack_len - needle_len + 1; ++i) {
+    if (compare_substrings(haystack, needle, i)) {
+      return i;
+    }
+  }
+  return -1;
 }
