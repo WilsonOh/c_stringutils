@@ -26,3 +26,4 @@ Some functions do not work in Windows. It is reccomended to use the library in a
 - `read_line`
 - `contains`
 - `long_to_string`
+- `find_substr`
