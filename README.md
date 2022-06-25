@@ -7,6 +7,7 @@ from the functions
 
 ## TODO
 - Implement a more robust iterator using macros
+- Implement `find`
 
 ## NOTE
 Some functions do not work in Windows. It is reccomended to use the library in a linux/macOS environment.
